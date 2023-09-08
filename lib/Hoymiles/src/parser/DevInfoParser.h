@@ -7,11 +7,15 @@
 
 class DevInfoParser : public Parser {
 public:
+    DevInfoParser();
     void clearBufferAll();
     void appendFragmentAll(uint8_t offset, uint8_t* payload, uint8_t len);
 
     void clearBufferSimple();
     void appendFragmentSimple(uint8_t offset, uint8_t* payload, uint8_t len);
+
+    void beginAppendFragment();
+    void endAppendFragment();
 
     uint32_t getLastUpdateAll();
     void setLastUpdateAll(uint32_t lastUpdate);
@@ -29,6 +33,8 @@ public:
     uint16_t getMaxPower();
     String getHwModelName();
 
+    bool containsValidData();
+
 private:
     time_t timegm(struct tm* tm);
     uint8_t getDevIdx();
@@ -41,4 +47,6 @@ private:
 
     uint8_t _payloadDevInfoSimple[DEV_INFO_SIZE] = {};
     uint8_t _devInfoSimpleLength = 0;
+
+    SemaphoreHandle_t _xSemaphore;
 };
